@@ -6,7 +6,7 @@ const chalk = require('chalk');
 console.log(chalk.yellow('------------------------------------------------------'));
 console.log(chalk.red('Carregou a lib chalk.'));
 
-const { Client,RichEmbed } = require('discord.js');
+const { Client, RichEmbed } = require('discord.js');
 console.log(chalk.red('Carregou a lib discord.js.'));
 
 const { request } = require('https');
@@ -21,7 +21,7 @@ console.log(chalk.red('Carregou a lib fs.'));
 const { keys } = require('./src/keys');
 console.log(chalk.green('Carregou as chaves de aplicação.'));
 
-const { greet,cumprimentos,dictionary } = require('./src/resources');
+const { greet, cumprimentos, dictionary } = require('./src/resources');
 console.log(chalk.green('Carregou os recursos.'));
 
 const objects = require('./src/objects');
@@ -76,7 +76,7 @@ client.on('ready', () => {
 client.on("guildMemberRemove", (member) => {
   if (member.guild.id == dictonary[fon]) {
     if (member.id == dictionary[senpiid]) {
-      functions.fnQuitaSenpi(dictionary[senpiid],db);
+      functions.fnQuitaSenpi(dictionary[senpiid], db);
     }
   }
 });
@@ -177,7 +177,7 @@ client.on('message', msg => {
           msg.reply('Qué sai no soco FDP????');
         }
       }
-      if(msg.content.includes('Vem então seu pedaço de lata que usa processador da intel!!!!')) {
+      if (msg.content.includes('Vem então seu pedaço de lata que usa processador da intel!!!!')) {
         if (msg.mentions.users.first() == client.user) {
           let link = 'https://media.discordapp.net/attachments/223594824681521152/707995160012652574/lixo.png';
           const embed = new RichEmbed().setImage(link);
@@ -206,27 +206,8 @@ client.on('message', msg => {
       }
     }
 
-    //se for a minha guilda ele duplica emojis, pra evitar spam em outras guildas
-    if (msg.guild.id == dictionary[guildjena]) {
-      //lista de emojis para serem duplicados
-      let emojiscopia = ['baiano_cy', 'carlao_cy', 'gaius_cy', 'kadu_cy', 'kek_cy', 'pistoranjo_cy', 'thonk_cy'];
-      let stremoji = String;
-      emojiscopia.forEach(element => {
-        //verifica se o emoji existe no servidor
-        let emojo = msg.guild.emojis.find(emoji => emoji.name == element);
-        if (emojo) {
-          //duplica
-          idemojo = '<:' + element + ':' + emojo.id + '>';
-          if (contente == (idemojo)) {
-            stremoji = idemojo;
-            msg.channel.send(stremoji);
-          }
-        }
-      });
-    }
-
-    //se for quarta quinta ou sexta apartir das 9 da manhã envia um meus bacanos
-    if (((diahoje == 3 || diahoje == 1) && horaagora >= 9) || (diahoje == 5 && horaagora >= 21)) {
+    //se for segunda quarta quinta ou sexta apartir das 9 da manhã envia um meus bacanos
+    if (((diahoje == 3 || diahoje == 4 || diahoje == 1) && horaagora >= 9) || (diahoje == 5 && horaagora >= 21)) {
       functions.fnMeusBacanos(msg.guild.id, diahoje, today, msg.channel, db);
     }
 
@@ -237,6 +218,18 @@ client.on('message', msg => {
         const embed = new RichEmbed().setImage(link)
         msg.channel.send(embed);
       };
+    }
+
+    if (contente == '!t-ping') {
+      if (functions.fnBuscaCooldown(msg.guild.id, 'PING', dia, msg.channel)) {
+        let timenow1 = new Date();
+        msg.channel.send('a').then(message => {
+
+          let timenow2 = new Date();
+          message.edit('` ' + (timenow2.getTime() - timenow1.getTime()) + 'ms `');
+
+        })
+      }
     }
 
     if (contente.startsWith('!tp ')) {
@@ -365,9 +358,9 @@ client.on('message', msg => {
 
     if (contente == ('!tabajara')) {
       if (functions.fnBuscaCooldown(msg.guild.id, 'TABAJARA', dia, msg.channel)) {
-          const embed = new RichEmbed().setImage(dictionary[tabajara])
-          msg.channel.send(embed);
-          return;
+        const embed = new RichEmbed().setImage(dictionary[tabajara])
+        msg.channel.send(embed);
+        return;
       }
     }
 
@@ -440,7 +433,7 @@ client.on('message', msg => {
 
 
     //Alternativas para o help
-    if (contente == '!t' || (contente == '<@!'+client.user.id+'>')) {
+    if (contente == '!t' || (contente == '<@!' + client.user.id + '>')) {
       contente = '!t-help'
     }
 
@@ -607,6 +600,25 @@ client.on('message', msg => {
         if (contente == '!t-img') {
           msg.reply('insira um parâmetro de busca! (Exemplo: !t-img batata)');
         }
+      }
+
+      //se for a minha guilda ele duplica emojis, pra evitar spam em outras guildas
+      if (msg.guild.id == dictionary[guildjena]) {
+        //lista de emojis para serem duplicados
+        let emojiscopia = ['baiano_cy', 'carlao_cy', 'gaius_cy', 'kadu_cy', 'kek_cy', 'pistoranjo_cy', 'thonk_cy'];
+        let stremoji = String;
+        emojiscopia.forEach(element => {
+          //verifica se o emoji existe no servidor
+          let emojo = msg.guild.emojis.find(emoji => emoji.name == element);
+          if (emojo) {
+            //duplica
+            idemojo = '<:' + element + ':' + emojo.id + '>';
+            if (contente == (idemojo)) {
+              stremoji = idemojo;
+              msg.channel.send(stremoji);
+            }
+          }
+        });
       }
       //aqui o código mais complexo do bot, randomiza as mensagens de cumprimento bom dia/boa tarde/boa noite
       for (var i = 0; i < cumprimentos.length; i++) {

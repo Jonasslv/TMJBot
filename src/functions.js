@@ -31,6 +31,7 @@ function fnInsertRegistro (usuario, jogo, guilda, db) {
 }
 
 const { RichEmbed } = require('discord.js');
+const cooldownSet = new Set();
 
 module.exports = {
     //funcao para contabilizar as mortes
@@ -84,7 +85,6 @@ module.exports = {
 
     //função que gera o cooldown
     fnBuscaCooldown: function (guilda, comando, data, channel) {
-        const cooldownSet = new Set();
         if (cooldownSet.has(guilda + comando)) {
             channel.send('Espere um pouco para utilizar esse comando.').then(message =>
                 message.delete(4000));
@@ -164,7 +164,7 @@ module.exports = {
 
     //função que verifica se a data do dia já foi notada, caso não, envia imagem e grava no banco o status do dia
     fnMeusBacanos: function (guilda, tipo, data, canal, db) {
-        const consagrados = require('./resources');
+        const resources = require('./resources');
         db.all('select * from GREETINGS where GUILDA = "' + guilda + '" and DATA = "' + data + '"  ', (err, row) => {
             if (err) {
                 throw err;
@@ -172,14 +172,13 @@ module.exports = {
             if (row != null && row.length > 0) {
                 return true;
             } else {
-                console.log('nao encontrou data');
                 db.run(`INSERT INTO GREETINGS(GUILDA,DATA,TIPO) VALUES("` + guilda + '","' + data + '","' + tipo + '")', (err, row) => {
                     if (err) {
                     }
                     if (tipo > 1) {
-                        var link = consagrados[tipo - 3];
+                        var link = resources.consagrados[tipo - 3];
                     } else {
-                        var link = consagrados[3];
+                        var link = resources.consagrados[3];
                     }
                     const embed = new RichEmbed().setImage(link);
                     canal.send(embed);
