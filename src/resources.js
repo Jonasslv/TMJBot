@@ -9,6 +9,7 @@ cumprimentos = [['BOM DIA', 'BODIA', 'BOM DIA KLEIN', 'BODIA KLEIN', 'DIA', 'DIA
 
 tabajara = 'https://cdn.discordapp.com/attachments/502820232306491412/603227933007413278/44412650_1908866625901297_5717995144913879040_n.png';
 normie = 'https://media.discordapp.net/attachments/223594824681521152/598889852536225825/hxDrq5m.png';
+lixo = 'https://media.discordapp.net/attachments/223594824681521152/707995160012652574/lixo.png';
 blacklist = ' NOME_JOGO <> "Spotify" and NOME_JOGO <> "Wallpaper Engine" and NOME_JOGO <> "Custom Status" and ';
 ver = '0.8-ALPHA';
 guildjena = '223594824681521152';
@@ -18,12 +19,12 @@ host = 'www.googleapis.com';
 path = '/customsearch/v1';
 idBotJogos = '628379294674190375';
 jenasID = '206552277044035584';
-emojis = ['pistoranjo_cy', 'monkaS_cy', 'residentsleeper_cy', 'q_cy', 'baiano_cy', 'carlao_cy', 'gaius_cy', 'kadu_cy', 'kek_cy', 'thonk_cy', 'kekw'];
+emojis = ['pistoranjo_cy', 'monkaS_cy', 'residentsleeper_cy', 'q_cy', 'baiano_cy', 'carlao_cy', 'gaius_cy', 'kadu_cy', 'kek_cy', 'thonk_cy', 'kekw', 'eitabixosexokkk'];
 
 module.exports = {
     greet: [] = [bomdia, boatarde, boanoite, deletthis, imgxingamento],
     cumprimentos: [] = cumprimentos,
     consagrados: [] = consagrados,
-    dictionary: [tabajara, normie, blacklist, ver, guildjena, senpiid, fon, host, path, idBotJogos, jenasID],
+    dictionary: [tabajara, normie, blacklist, ver, guildjena, senpiid, fon, host, path, idBotJogos, jenasID, lixo],
     emojis: [] = emojis
 }
