@@ -2,7 +2,7 @@ const { RichEmbed } = require('discord.js');
 const objects = require('./objects');
 const { greet, dictionary, emojis } = require('./resources');
 const functions = require('./functions');
-const keys = require('./keys');
+const { keys } = require('./keys');
 const { readFileSync, writeFile, exists, readdir } = require('fs');
 
 //Posições dos arrays de chaves.
@@ -230,6 +230,7 @@ function fnCopypastaRandom(msg) {
   }
   
   function fnBuscaImg(msg, db) {
+    const { request } = require('https');
     let searchTerm = msg.content.substring(7, msg.content.length);
   
     let request_params = {
@@ -283,7 +284,7 @@ function fnCopypastaRandom(msg) {
         }
       })
     };
-  
+
     let req = request(request_params, response_handler);
     req.end();
   }

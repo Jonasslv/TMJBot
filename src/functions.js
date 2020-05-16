@@ -1,7 +1,9 @@
 
 const { RichEmbed } = require('discord.js');
 const cooldownSet = new Set();
-const {dictionary,consagrados} = require('./resources');
+const {dictionary} = require('./resources');
+const objects = require('./objects');
+const { readFileSync } = require('fs');
 
 
 function fnChecaReactIMG(db, msgReact, user) {
@@ -246,6 +248,8 @@ module.exports = {
 
     //função que gera o cooldown
     fnBuscaCooldown: fnBuscaCooldown,
+
+    fnChecaReactIMG:fnChecaReactIMG,
 
     //função que verifica se o jogo está no BD, se não estiver grava, se estiver atualiza data
     fnBuscaId: fnBuscaId,
