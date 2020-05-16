@@ -1,4 +1,4 @@
-function fnUpdateRegistro (usuario, jogo, guilda, data, db) {
+function fnUpdateRegistro(usuario, jogo, guilda, data, db) {
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -15,7 +15,7 @@ function fnUpdateRegistro (usuario, jogo, guilda, data, db) {
     }
 }
 
-function fnInsertRegistro (usuario, jogo, guilda, db) {
+function fnInsertRegistro(usuario, jogo, guilda, db) {
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -28,6 +28,22 @@ function fnInsertRegistro (usuario, jogo, guilda, db) {
         }
         return true;
     });
+}
+
+function fnGerarEmojiMsg(nomeEmoji, idEmoji, animado) {
+    let str;
+    if (animado) {
+        str = '<a:';
+    } else {
+        str = '<:';
+    }
+    return str + nomeEmoji + ':' + idEmoji + '>';
+}
+
+function fnMarkdownMsg(str) {
+    change = '``` ';
+    change = change + str;
+    return change + ' ```';
 }
 
 const { RichEmbed } = require('discord.js');
@@ -114,7 +130,7 @@ module.exports = {
                 });
 
             } else {
-                fnInsertRegistro(newMember.user.id, newMember.presence.game.toString(), guilda,db);
+                fnInsertRegistro(newMember.user.id, newMember.presence.game.toString(), guilda, db);
             }
         });
     },
@@ -137,8 +153,7 @@ module.exports = {
         }
     },
 
-    //função que grava no registro um jogo por usuario
-    fnInsertRegistro: fnInsertRegistro,
+
 
     //função que grava no registro um jogo por usuario
     fnQuitaSenpi: function (usuario, db) {
@@ -159,8 +174,7 @@ module.exports = {
         });
     },
 
-    //função que dá update no registro num jogo por usuario
-    fnUpdateRegistro: fnUpdateRegistro,
+
 
     //função que verifica se a data do dia já foi notada, caso não, envia imagem e grava no banco o status do dia
     fnMeusBacanos: function (guilda, tipo, data, canal, db) {
@@ -186,5 +200,11 @@ module.exports = {
                 });
             }
         });
-    }
+    },
+    fnMarkdownMsg: fnMarkdownMsg,
+    fnGerarEmojiMsg: fnGerarEmojiMsg,
+    //função que dá update no registro num jogo por usuario
+    fnUpdateRegistro: fnUpdateRegistro,
+    //função que grava no registro um jogo por usuario
+    fnInsertRegistro: fnInsertRegistro
 }

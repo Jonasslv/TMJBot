@@ -1,6 +1,6 @@
 
-//TO-DO : ainda existem alguns links e ID's que precisam ser guardados nos recursos.
 //TO-DO : filtrar e transformar em funções os eventos para tornar mais fácil a leitura do código.
+//TO-DO : prepared statement para os SQL's
 
 const chalk = require('chalk');
 console.log(chalk.yellow('------------------------------------------------------'));
@@ -21,7 +21,7 @@ console.log(chalk.red('Carregou a lib fs.'));
 const { keys } = require('./src/keys');
 console.log(chalk.green('Carregou as chaves de aplicação.'));
 
-const { greet, cumprimentos, dictionary } = require('./src/resources');
+const { greet, cumprimentos, dictionary, emojis } = require('./src/resources');
 console.log(chalk.green('Carregou os recursos.'));
 
 const objects = require('./src/objects');
@@ -49,6 +49,8 @@ const senpiid = 5;
 const fon = 6;
 const host = 7;
 const path = 8;
+const idBotJogos = 9;
+const jenasID = 10;
 
 //Variáveis Globais
 var searchTerm;
@@ -74,7 +76,7 @@ client.on('ready', () => {
 
 //Evento quando alguém sai de uma guild
 client.on("guildMemberRemove", (member) => {
-  if (member.guild.id == dictonary[fon]) {
+  if (member.guild.id == dictionary[fon]) {
     if (member.id == dictionary[senpiid]) {
       functions.fnQuitaSenpi(dictionary[senpiid], db);
     }
@@ -138,12 +140,11 @@ client.on('messageReactionAdd', (msgReact, user) => {
   }
 });
 
-
 //onde a magia acontece, evento ao receber uma mensagem
 client.on('message', msg => {
   //se a mensagem não for por PM ou o autor da mensagem não for bot ele dá continuidade no comando
   if (msg.channel.type == "dm" || msg.author.bot) {
-    if (msg.author.id == '206552277044035584') {
+    if (msg.author.id == dictionary[jenasID]) {
       if (esperandoPasta) {
         esperandoPasta = false;
         if (msg.content != 'cancel') {
@@ -154,7 +155,6 @@ client.on('message', msg => {
               console.log(err);
             };
             msg.reply('Copypasta adicionada com sucesso.');
-
           });
         }
       } else {
@@ -163,17 +163,16 @@ client.on('message', msg => {
         msg.reply('Insira a copypasta de nome: ' + pasta.NOME_PASTA);
       }
     }
-    if (msg.author.id == "628379294674190375") {
+    if (msg.author.id == dictionary[idBotJogos]) {
       if (msg.content.startsWith('Burro do server é') || msg.content.startsWith('Burro agora é você') || msg.content.includes('porra bicho você quer ser mais burro do que ja é?')) {
         if (msg.mentions.users.first() == msg.guild.owner.user) {
-          let emojo = msg.guild.emojis.find(emoji => emoji.name == 'pistoranjo_cy');
-          msg.reply('Meu dono não é burro não <:pistoranjo_cy:' + emojo.id + '>');
+          let emojo = msg.guild.emojis.find(emoji => emoji.name == emojis[0]);
+          msg.reply('Meu dono não é burro não ' + functions.fnGerarEmojiMsg(emojo.name, emojo.id, false));
         }
 
       }
       if (msg.content.includes('É sim')) {
         if (msg.mentions.users.first() == client.user) {
-          let emojo = msg.guild.emojis.find(emoji => emoji.name == 'pistoranjo_cy');
           msg.reply('Qué sai no soco FDP????');
         }
       }
@@ -187,21 +186,21 @@ client.on('message', msg => {
     }
   } else {
     //variaveis da mensagem recebida
-    var contente = msg.content;
-    var today = new Date();
-    var dia = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-    var diahoje = today.getDay();
-    var horaagora = today.getHours();
+    var dadosMsg = msg.content; //dados da mensagem separado para tratamento
+    var today = new Date(); //Data atual em formato DD/MM/YYYY
+    var dia = new Date(); //Data atual em formato universal
+    var dd = String(today.getDate()).padStart(2, '0'); //Extrai dia atual
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //Extrai mês atual (janeiro é 0)
+    var yyyy = today.getFullYear(); //Extrai ano atual
+    var diahoje = today.getDay(); //Extrai Dia da semana 0 é domingo
+    var horaagora = today.getHours(); //Extrai horário atual
 
     today = dd + '/' + mm + '/' + yyyy;
 
-    if (contente.startsWith(':') && contente.endsWith(':')) {
-      let emojo = msg.guild.emojis.find(emoji => emoji.name == contente.substring(1, contente.length - 1));
+    if (dadosMsg.startsWith(':') && dadosMsg.endsWith(':')) {
+      let emojo = msg.guild.emojis.find(emoji => emoji.name == dadosMsg.substring(1, dadosMsg.length - 1));
       if (emojo) {
-        idemojo = '<a' + contente + emojo.id + '>';
+        idemojo = functions.fnGerarEmojiMsg(emojo.name, emojo.id, true); //'<a' + dadosMsg + emojo.id + '>';
         msg.channel.send(idemojo).then(obj2 => msg.channel.send('(Enviado por: ' + msg.author.username + ')').then(obj => msg.delete(50)));
       }
     }
@@ -212,7 +211,7 @@ client.on('message', msg => {
     }
 
     //se a mensagem conter normie manda tu parar de ser normie
-    if (contente.toUpperCase().includes('NORMIE')) {
+    if (dadosMsg.toUpperCase().includes('NORMIE')) {
       if (functions.fnBuscaCooldown(msg.guild.id, 'NORMIE', dia, msg.channel)) {
         let link = dictionary[normie];
         const embed = new RichEmbed().setImage(link)
@@ -220,7 +219,7 @@ client.on('message', msg => {
       };
     }
 
-    if (contente == '!t-ping') {
+    if (dadosMsg == '!t-ping') {
       if (functions.fnBuscaCooldown(msg.guild.id, 'PING', dia, msg.channel)) {
         let timenow1 = new Date();
         msg.channel.send('a').then(message => {
@@ -232,7 +231,7 @@ client.on('message', msg => {
       }
     }
 
-    if (contente.startsWith('!tp ')) {
+    if (dadosMsg.startsWith('!tp ')) {
       if (functions.fnBuscaCooldown(msg.guild.id, 'PASTA', dia, msg.channel)) {
         let nomePasta = msg.content.substring(4, msg.content.length);
         exists('./pasta/' + nomePasta + '.json', existe => {
@@ -247,7 +246,7 @@ client.on('message', msg => {
         });
       }
     }
-    if (contente == '!tp-random') {
+    if (dadosMsg == '!tp-random') {
       if (functions.fnBuscaCooldown(msg.guild.id, 'PASTA', dia, msg.channel)) {
         let listacopypasta = [];
         readdir('./pasta/', function (err, files) {
@@ -269,7 +268,7 @@ client.on('message', msg => {
       }
     }
 
-    if (contente == '!tp-lista') {
+    if (dadosMsg == '!tp-lista') {
       if (functions.fnBuscaCooldown(msg.guild.id, 'PASTALISTA', dia, msg.channel)) {
         let listacopypasta = String('');
         readdir('./pasta/', function (err, files) {
@@ -281,17 +280,15 @@ client.on('message', msg => {
           files.forEach(function (file) {
             if (listacopypasta != '') {
               listacopypasta += ', ';
-            } else {
-              listacopypasta = '```';
-            }
+            };
             listacopypasta += file.substring(0, file.length - 5);
           });
-          msg.channel.send('Lista de copypastas: ' + listacopypasta + '```');
+          msg.channel.send('Lista de copypastas: ' + functions.fnMarkdownMsg(listacopypasta));
         });
       }
     }
 
-    if (contente == ('!senpi')) {
+    if (dadosMsg == ('!senpi')) {
       if (functions.fnBuscaCooldown(msg.guild.id, 'SENPI', dia, msg.channel)) {
         db.all('SELECT * FROM senpi', (err, row) => {
           if (err) {
@@ -307,26 +304,26 @@ client.on('message', msg => {
       }
     }
 
-    if (contente == ('!roulette')) {
+    if (dadosMsg == ('!roulette')) {
       if (functions.fnBuscaCooldown(msg.guild.id, 'ROLETA', dia, msg.channel)) {
         let bala = Math.floor((Math.random() * 6) + 1);
         if (bala == 3) {
           functions.fnRoleta(msg.member.id, msg.guild.id, true, db);
-          const residentsleeper = client.emojis.find(emoji => emoji.name === "residentsleeper_cy");
+          const residentsleeper = client.emojis.find(emoji => emoji.name === emojis[2]);
           msg.reply(`você morreu!! ${residentsleeper}`);
         } else {
           functions.fnRoleta(msg.member.id, msg.guild.id, false, db);
-          const monkaS = client.emojis.find(emoji => emoji.name === "monkaS_cy");
+          const monkaS = client.emojis.find(emoji => emoji.name === emojis[1]);
           msg.reply(`a arma falha, por sorte. ${monkaS}`);
         }
       }
     }
 
-    if (contente.toUpperCase().includes('ADOLESCENTE')) {
+    if (dadosMsg.toUpperCase().includes('ADOLESCENTE')) {
       msg.channel.send("Adolescente é merda");
     }
 
-    if (contente == ('!r-top')) {
+    if (dadosMsg == ('!r-top')) {
       if (functions.fnBuscaCooldown(msg.guild.id, 'ROLETA_TOP', dia, msg.channel)) {
         let guilda = msg.guild.id;
         db.all('select * from roleta where guilda = "' + guilda + '" and num_morte > 0 order by num_morte DESC LIMIT 20', (err, row) => {
@@ -336,8 +333,9 @@ client.on('message', msg => {
           if (row != null && row.length > 0) {
             let listtop = new Array(objects.morte);
             listtop = row;
-            var str = String;
-            str = ' As pessoas que mais morreram no servidor são: \n```';
+            let prefix;
+            let str = '';
+            prefix = ' As pessoas que mais morreram no servidor são: \n';
             let user;
             listtop.forEach(element => {
               if (client.users.get(element.id_user) != null) {
@@ -345,9 +343,8 @@ client.on('message', msg => {
                 str = str + user.username + ' - ' + element.num_morte + ' mortes - ' + ((100 / (element.num_morte + element.num_tentativas)) * element.num_morte).toFixed(2) + '% \n';
               }
             });
-            str = str + '```';
             listtop = [];
-            msg.reply(str);
+            msg.reply(prefix + functions.fnMarkdownMsg(str));
           } else {
             msg.reply(' Ninguém morreu no servidor.');
           }
@@ -356,7 +353,7 @@ client.on('message', msg => {
     }
 
 
-    if (contente == ('!tabajara')) {
+    if (dadosMsg == ('!tabajara')) {
       if (functions.fnBuscaCooldown(msg.guild.id, 'TABAJARA', dia, msg.channel)) {
         const embed = new RichEmbed().setImage(dictionary[tabajara])
         msg.channel.send(embed);
@@ -364,7 +361,7 @@ client.on('message', msg => {
       }
     }
 
-    if (contente.startsWith('!t-img ')) {
+    if (dadosMsg.startsWith('!t-img ')) {
       if (functions.fnBuscaCooldown(msg.guild.id, 'IMG', dia, msg.channel)) {
         searchTerm = msg.content.substring(7, msg.content.length);
 
@@ -418,14 +415,14 @@ client.on('message', msg => {
       }
     }
 
-    if (contente == ('!pistolette')) {
+    if (dadosMsg == ('!pistolette')) {
       if (functions.fnBuscaCooldown(msg.guild.id, 'PISTOLETTE', dia, msg.channel)) {
         let bala = Math.floor((Math.random() * 50) + 1);
         if (bala == 25) {
-          const q_ = client.emojis.find(emoji => emoji.name === "q_cy");
+          const q_ = client.emojis.find(emoji => emoji.name === emojis[3]);
           msg.reply(`A arma falha!! ${q_}`);
         } else {
-          const residentsleeper = client.emojis.find(emoji => emoji.name === "residentsleeper_cy");
+          const residentsleeper = client.emojis.find(emoji => emoji.name === emojis[2]);
           msg.reply(`você morreu!! ${residentsleeper}`);
         }
       }
@@ -433,14 +430,14 @@ client.on('message', msg => {
 
 
     //Alternativas para o help
-    if (contente == '!t' || (contente == '<@!' + client.user.id + '>')) {
-      contente = '!t-help'
+    if (dadosMsg == '!t' || (dadosMsg == '<@!' + client.user.id + '>')) {
+      dadosMsg = '!t-help'
     }
 
     //mensagem de help
-    if (contente.startsWith('!t-help')) {
+    if (dadosMsg.startsWith('!t-help')) {
       if (functions.fnBuscaCooldown(msg.guild.id, 'HELP', dia, msg.channel)) {
-        var str = "\n```Comandos Atuais do Bot: \n" +
+        var str = "\nComandos Atuais do Bot: \n" +
           "!t <jogo>: Busca os players do jogo.\n" +
           "!t-top: Exibe os jogos mais populares do servidor.\n" +
           "!t-user <user>: Exibe os jogos recentes desse usuário.\n" +
@@ -452,24 +449,24 @@ client.on('message', msg => {
           "!tp-random: Copypasta aleatória.\n" +
           "!roulette: Roleta russa com revólver.\n" +
           "!pistolette: Roleta russa com pistola.\n" +
-          "Envio de emotes animados sem nitro! (o emote precisa existir no servidor), é só digitar o emote normalmente por exemplo :smugkid:```";
-        msg.reply(str);
+          "Envio de emotes animados sem nitro! (o emote precisa existir no servidor), é só digitar o emote normalmente por exemplo :smugkid:";
+        msg.reply(functions.fnMarkdownMsg(str));
       }
     };
 
     //mensagem de versão
-    if (contente == ('!t-ver')) {
+    if (dadosMsg == ('!t-ver')) {
       if (functions.fnBuscaCooldown(msg.guild.id, 'VER', dia, msg.channel)) {
-        var str = "\n```Versão do bot: " + dictionary[ver] + " \n" +
+        var str = "\nVersão do bot: " + dictionary[ver] + " \n" +
           "Desenvolvedor: Jenas#8080 \n" +
-          "Página do GitHub: https://github.com/Jonasslv/TMJBot/ ```";
+          "Página do GitHub: https://github.com/Jonasslv/TMJBot/ ";
 
-        msg.reply(str);
+        msg.reply(functions.fnMarkdownMsg(str));
       }
     };
 
     //mensagem que retorna os top jogos do server
-    if (contente == ('!t-top')) {
+    if (dadosMsg == ('!t-top')) {
       if (functions.fnBuscaCooldown(msg.guild.id, 'TOP', dia, msg.channel)) {
         let guilda = msg.guild.id;
         db.all('select count(nome_jogo) as QTDE,NOME_JOGO from jpu where ' + dictionary[blacklist] + ' GUILDA = "' + guilda + '" group by NOME_JOGO order by qtde desc LIMIT 20', (err, row) => {
@@ -479,14 +476,14 @@ client.on('message', msg => {
           if (row != null && row.length > 0) {
             let listtop = new Array(objects.jputop);
             listtop = row;
-            var str = String;
-            str = ' Os jogos mais populares do servidor são: \n```';
+            let str = '';
+            let prefix;
+            prefix = ' Os jogos mais populares do servidor são: \n';
             listtop.forEach(element => {
               str = str + element.NOME_JOGO + ' - ' + element.QTDE + ' jogadores \n';
             });
-            str = str + '```';
             listtop = [];
-            msg.reply(str);
+            msg.reply(prefix + functions.fnMarkdownMsg(str));
           } else {
             msg.reply(' Não existem jogos registrados no servidor.');
           }
@@ -495,7 +492,7 @@ client.on('message', msg => {
     } else {
 
       //mensagem que retorna os usuarios de determinado jogo
-      if (contente.startsWith('!t ')) {
+      if (dadosMsg.startsWith('!t ')) {
         if (functions.fnBuscaCooldown(msg.guild.id, 'GAME', dia, msg.channel)) {
           var jogo = msg.content.substring(3, msg.content.length);
           //trata os alias se um deles tiver sido pesquisado
@@ -517,9 +514,10 @@ client.on('message', msg => {
               if (row != null && row.length > 0) {
                 let listUsers = new Array(objects.jpu);
                 listUsers = row;
-                var str = String;
+                let str = '';
+                let prefix;
                 let existeuser = false;
-                str = ' essas pessoas jogaram ' + jogo + ': \n```';
+                prefix = ' essas pessoas jogaram ' + jogo + ': \n';
                 listUsers.forEach(element => {
                   var user = client.users.get(element.ID_USUARIO);
                   if (user != undefined) {
@@ -528,9 +526,8 @@ client.on('message', msg => {
                   }
                 });
                 if (existeuser) {
-                  str = str + '```';
                   listUsers = [];
-                  msg.reply(str);
+                  msg.reply(prefix + functions.fnMarkdownMsg(str));
                 } else {
                   msg.reply(' Não foi possível encontrar o jogo.');
                 }
@@ -542,10 +539,10 @@ client.on('message', msg => {
         }
       }
       //se o comando for de usuarios verifica Menção > uername > nickname
-      if (contente.startsWith('!t-user')) {
+      if (dadosMsg.startsWith('!t-user')) {
         if (functions.fnBuscaCooldown(msg.guild.id, 'USER', dia, msg.channel)) {
           let user;
-          if (contente == '!t-user') {
+          if (dadosMsg == '!t-user') {
             user = msg.author;
           } else {
             //verifica se foi menção
@@ -577,17 +574,17 @@ client.on('message', msg => {
               if (row != null && row.length > 0) {
                 let listUsers = new Array(objects.jpu);
                 listUsers = row;
-                var str = String;
-                str = user.username + ' jogou recentemente: \n```';
+                let str = '';
+                let prefix;
+                prefix = user.username + ' jogou recentemente: \n';
                 listUsers.forEach(element => {
                   var user = client.users.get(element.ID_USUARIO);
                   if (user != undefined) {
                     str = str + ' ' + element.NOME_JOGO + ' (' + element.DATA + ')\n';
                   }
                 });
-                str = str + '```';
                 listUsers = [];
-                msg.reply(str);
+                msg.reply(prefix + functions.fnMarkdownMsg(str));
               } else {
                 msg.reply(' esse usuário não jogou recentemente.');
               }
@@ -597,7 +594,7 @@ client.on('message', msg => {
           }
         }
       } else {
-        if (contente == '!t-img') {
+        if (dadosMsg == '!t-img') {
           msg.reply('insira um parâmetro de busca! (Exemplo: !t-img batata)');
         }
       }
@@ -605,15 +602,15 @@ client.on('message', msg => {
       //se for a minha guilda ele duplica emojis, pra evitar spam em outras guildas
       if (msg.guild.id == dictionary[guildjena]) {
         //lista de emojis para serem duplicados
-        let emojiscopia = ['baiano_cy', 'carlao_cy', 'gaius_cy', 'kadu_cy', 'kek_cy', 'pistoranjo_cy', 'thonk_cy'];
+        let emojiscopia = [emojis[0], emojis[4], emojis[5], emojis[6], emojis[7], emojis[8], emojis[9], emojis[10]];
         let stremoji = String;
         emojiscopia.forEach(element => {
           //verifica se o emoji existe no servidor
           let emojo = msg.guild.emojis.find(emoji => emoji.name == element);
           if (emojo) {
             //duplica
-            idemojo = '<:' + element + ':' + emojo.id + '>';
-            if (contente == (idemojo)) {
+            idemojo = functions.fnGerarEmojiMsg(emojo.name, emojo.id, false);
+            if (dadosMsg == (idemojo)) {
               stremoji = idemojo;
               msg.channel.send(stremoji);
             }
@@ -623,11 +620,20 @@ client.on('message', msg => {
       //aqui o código mais complexo do bot, randomiza as mensagens de cumprimento bom dia/boa tarde/boa noite
       for (var i = 0; i < cumprimentos.length; i++) {
         for (var i2 = 0; i2 < cumprimentos[i].length; i2++) {
-          if (contente.toUpperCase() == (cumprimentos[i][i2])) {
+          if (dadosMsg.toUpperCase() == (cumprimentos[i][i2])) {
             let nr = i;
             if (functions.fnBuscaCooldown(msg.guild.id, 'GREETINGS', dia, msg.channel)) {
-              if ((i == 0 && ((horaagora == 12 || horaagora == 13 || horaagora == 14 || horaagora == 15 || horaagora == 16 || horaagora == 17 || horaagora == 18 || horaagora == 19 || horaagora == 20 || horaagora == 21 || horaagora == 22 || horaagora == 23 || horaagora == 0 || horaagora == 1 || horaagora == 2 || horaagora == 3 || horaagora == 4 || horaagora == 5)) || (i == 1 && (horaagora == 0 || horaagora == 1 || horaagora == 2 || horaagora == 3 || horaagora == 4 || horaagora == 5 || horaagora == 6 || horaagora == 7 || horaagora == 8 || horaagora == 9 || horaagora == 10 || horaagora == 11 || horaagora == 18 || horaagora == 19 || horaagora == 20 || horaagora == 21 || horaagora == 22 || horaagora == 23)) || (i == 2 && (horaagora == 6 || horaagora == 7 || horaagora == 8 || horaagora == 9 || horaagora == 10 || horaagora == 11 || horaagora == 12 || horaagora == 13 || horaagora == 14 || horaagora == 15 || horaagora == 16 || horaagora == 17)))) {
-                const pistoranjo = client.emojis.find(emoji => emoji.name === "pistoranjo_cy");
+              if ((i == 0 && ((horaagora == 12 || horaagora == 13 || horaagora == 14 || horaagora == 15 ||
+                horaagora == 16 || horaagora == 17 || horaagora == 18 || horaagora == 19 || horaagora == 20 ||
+                horaagora == 21 || horaagora == 22 || horaagora == 23 || horaagora == 0 || horaagora == 1 ||
+                horaagora == 2 || horaagora == 3 || horaagora == 4 || horaagora == 5)) || (i == 1 && (horaagora == 0 ||
+                  horaagora == 1 || horaagora == 2 || horaagora == 3 || horaagora == 4 || horaagora == 5 || horaagora == 6 ||
+                  horaagora == 7 || horaagora == 8 || horaagora == 9 || horaagora == 10 || horaagora == 11 ||
+                  horaagora == 18 || horaagora == 19 || horaagora == 20 || horaagora == 21 || horaagora == 22 ||
+                  horaagora == 23)) || (i == 2 && (horaagora == 6 || horaagora == 7 || horaagora == 8 ||
+                    horaagora == 9 || horaagora == 10 || horaagora == 11 || horaagora == 12 || horaagora == 13 ||
+                    horaagora == 14 || horaagora == 15 || horaagora == 16 || horaagora == 17)))) {
+                const pistoranjo = client.emojis.find(emoji => emoji.name === emojis[0]);
                 msg.reply(`Olha a hora fdp. ${pistoranjo}`);
               } else {
                 let link = greet[nr][Math.floor((Math.random() * greet[nr].length) + 1) - 1];

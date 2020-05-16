@@ -16,11 +16,14 @@ senpiid = '584107122476711987';
 fon = '223930821046829056';
 host = 'www.googleapis.com';
 path = '/customsearch/v1';
-
+idBotJogos = '628379294674190375';
+jenasID = '206552277044035584';
+emojis = ['pistoranjo_cy', 'monkaS_cy', 'residentsleeper_cy', 'q_cy', 'baiano_cy', 'carlao_cy', 'gaius_cy', 'kadu_cy', 'kek_cy', 'thonk_cy', 'kekw'];
 
 module.exports = {
     greet: [] = [bomdia, boatarde, boanoite, deletthis, imgxingamento],
     cumprimentos: [] = cumprimentos,
     consagrados: [] = consagrados,
-    dictionary: [tabajara,normie,blacklist,ver,guildjena,senpiid,fon,host,path]
+    dictionary: [tabajara, normie, blacklist, ver, guildjena, senpiid, fon, host, path, idBotJogos, jenasID],
+    emojis: [] = emojis
 }
