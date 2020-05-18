@@ -56,7 +56,6 @@ const jenasID = 10;
 const lixo = 11;
 
 //Variáveis Globais
-var esperandoPasta = false;
 var pasta = new objects.copypasta();
 
 //Liga o DB
@@ -70,7 +69,7 @@ var db = new sqlite3.Database('./dbjogos.db', sqlite3.OPEN_READWRITE, (err) => {
 //Evento de quando o bot estiver lançado
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
-  client.user.setActivity(" CYBERPUNK 2077");
+  client.user.setActivity(" !t-help para comandos.");
 });
 
 
@@ -95,7 +94,7 @@ client.on('message', msg => {
   //se a mensagem não for por PM ou o autor da mensagem não for bot ele dá continuidade no comando
   if (msg.channel.type == "dm" || msg.author.bot) {
     if (msg.author.id == dictionary[jenasID]) {
-      comandos.fnCapturarCopypasta(pasta, esperandoPasta, msg);
+      comandos.fnCapturarCopypasta(pasta, msg);
     }
     if (msg.author.id == dictionary[idBotJogos]) {
       comandos.fnRinhaDeBot(msg, client);
@@ -246,7 +245,7 @@ client.on('message', msg => {
       for (var i2 = 0; i2 < cumprimentos[i].length; i2++) {
         if (dadosMsg.toUpperCase() == (cumprimentos[i][i2])) {
           if (functions.fnBuscaCooldown(msg.guild.id, 'GREETINGS', dia, msg.channel)) {
-            comandos.fnEnviaMsgCumprimento(msg,i,horaagora);
+            comandos.fnEnviaMsgCumprimento(msg,i,horaagora,client);
           }
         }
       }

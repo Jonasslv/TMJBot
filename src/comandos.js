@@ -24,6 +24,8 @@ const idBotJogos = 9;
 const jenasID = 10;
 const lixo = 11;
 
+var esperandoPasta = false;
+
 function fnCopypastaRandom(msg) {
     let listacopypasta = [];
     readdir('./pasta/', function (err, files) {
@@ -104,7 +106,7 @@ function fnCopypastaRandom(msg) {
     }
   }
 
-  function fnCapturarCopypasta(pasta, esperandoPasta, msg) {
+  function fnCapturarCopypasta(pasta, msg) {
     if (esperandoPasta) {
       esperandoPasta = false;
       if (msg.content != 'cancel') {
@@ -450,7 +452,7 @@ function fnCopypastaRandom(msg) {
     });
   }
   
-  function fnEnviaMsgCumprimento(msg,i,horaagora){
+  function fnEnviaMsgCumprimento(msg,i,horaagora,client){
     let nr = i;
     if ((i == 0 && ((horaagora == 12 || horaagora == 13 || horaagora == 14 || horaagora == 15 ||
       horaagora == 16 || horaagora == 17 || horaagora == 18 || horaagora == 19 || horaagora == 20 ||
