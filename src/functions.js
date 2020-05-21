@@ -134,8 +134,9 @@ function fnGravarRoleta(usuario, guilda, morte, db) {
             lstmorte = row;
             let nrotentativas = parseInt(lstmorte[0].num_tentativas);
             let nummortes = parseInt(lstmorte[0].num_morte);
-            if (morte) { nummortes = nummortes+1 }else{ nrotentativas = nrotentativas+1 };
-                db.run('UPDATE roleta SET num_morte = $nromortes and num_tentativas = $numtentativas WHERE id_user = $iduser and guilda= $idguild', {
+            if (morte) 
+                {nummortes = nummortes+1;}else{nrotentativas = nrotentativas+1;};
+                db.run('UPDATE roleta SET num_morte = $nromortes, num_tentativas = $numtentativas WHERE id_user = $iduser and guilda= $idguild', {
                     $nromortes: nummortes,
                     $iduser: usuario,
                     $idguild: guilda,

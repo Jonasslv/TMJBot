@@ -212,7 +212,8 @@ function fnCopypastaRandom(msg) {
         prefix = ' As pessoas que mais morreram no servidor são: \n';
         let user;
         listtop.forEach(element => {
-          if (client.users.get(element.id_user) != null) {
+          user = client.users.get(element.id_user);
+          if (user != undefined) {
             user = client.users.get(element.id_user);
             str = str + user.username + ' - ' + element.num_morte + ' mortes - ' + ((100 / (element.num_morte + element.num_tentativas)) * element.num_morte).toFixed(2) + '% \n';
           }
