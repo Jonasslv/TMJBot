@@ -47,9 +47,7 @@ function fnCopypastaRandom(msg) {
   }
 
   function fnParaDeSerNormie(msg) {
-    let link = dictionary[normie];
-    const embed = new RichEmbed().setImage(link)
-    msg.channel.send(embed);
+    msg.channel.send(functions.fnEnviaImagemEmbed(dictionary[normie]));
   }
   
   function fnFakePing(msg) {
@@ -99,9 +97,7 @@ function fnCopypastaRandom(msg) {
     }
     if (msg.content.includes('Vem então seu pedaço de lata que usa processador da intel!!!!')) {
       if (msg.mentions.users.first() == client.user) {
-        ;
-        const embed = new RichEmbed().setImage(dictionary[lixo]);
-        msg.channel.send(embed);
+        msg.channel.send(functions.fnEnviaImagemEmbed(dictionary[lixo]));
       }
     }
   }
@@ -227,8 +223,7 @@ function fnCopypastaRandom(msg) {
   }
   
   function fnTabajara(msg) {
-    const embed = new RichEmbed().setImage(dictionary[tabajara])
-    msg.channel.send(embed);
+    msg.channel.send(functions.fnEnviaImagemEmbed(dictionary[tabajara]));
     return;
   }
   
@@ -469,8 +464,7 @@ function fnCopypastaRandom(msg) {
       msg.reply(`Olha a hora fdp. ${pistoranjo}`);
     } else {
       let link = greet[nr][Math.floor((Math.random() * greet[nr].length) + 1) - 1];
-      const embed = new RichEmbed().setImage(link);
-      msg.channel.send(embed);
+      msg.channel.send(functions.fnEnviaImagemEmbed(link));
     }
     return;
   }
@@ -491,8 +485,7 @@ function fnMeusBacanos(guilda, tipo, data, canal, db) {
                 } else {
                     var link = consagrados[3];
                 }
-                const embed = new RichEmbed().setImage(link);
-                canal.send(embed);
+                canal.send(functions.fnEnviaImagemEmbed(link));
                 return true;
             });
         }

@@ -5,6 +5,10 @@ const {dictionary} = require('./resources');
 const objects = require('./objects');
 const { readFileSync } = require('fs');
 
+function fnEnviaImagemEmbed(link){
+    const Embed = new RichEmbed().setImage(link);
+    return Embed;
+}
 
 function fnChecaReactIMG(db, msgReact, user) {
     db.all('SELECT * FROM IMG WHERE ID_MSG = $msgid and ID_GUILD = $guildid and ID_USER = $userid ', {
@@ -270,5 +274,6 @@ module.exports = {
     //função que dá update no registro num jogo por usuario
     fnUpdateRegistro: fnUpdateRegistro,
     //função que grava no registro um jogo por usuario
-    fnInsertRegistro: fnInsertRegistro
+    fnInsertRegistro: fnInsertRegistro,
+    fnEnviaImagemEmbed:fnEnviaImagemEmbed
 }
