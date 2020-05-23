@@ -448,22 +448,13 @@ function fnCopypastaRandom(msg) {
     });
   }
   
-  function fnEnviaMsgCumprimento(msg,i,horaagora,client){
-    let nr = i;
-    if ((i == 0 && ((horaagora == 12 || horaagora == 13 || horaagora == 14 || horaagora == 15 ||
-      horaagora == 16 || horaagora == 17 || horaagora == 18 || horaagora == 19 || horaagora == 20 ||
-      horaagora == 21 || horaagora == 22 || horaagora == 23 || horaagora == 0 || horaagora == 1 ||
-      horaagora == 2 || horaagora == 3 || horaagora == 4 || horaagora == 5)) || (i == 1 && (horaagora == 0 ||
-        horaagora == 1 || horaagora == 2 || horaagora == 3 || horaagora == 4 || horaagora == 5 || horaagora == 6 ||
-        horaagora == 7 || horaagora == 8 || horaagora == 9 || horaagora == 10 || horaagora == 11 ||
-        horaagora == 18 || horaagora == 19 || horaagora == 20 || horaagora == 21 || horaagora == 22 ||
-        horaagora == 23)) || (i == 2 && (horaagora == 6 || horaagora == 7 || horaagora == 8 ||
-          horaagora == 9 || horaagora == 10 || horaagora == 11 || horaagora == 12 || horaagora == 13 ||
-          horaagora == 14 || horaagora == 15 || horaagora == 16 || horaagora == 17)))) {
+  function fnEnviaMsgCumprimento(msg,nro,horaagora,client){
+    let horarioDia = functions.fnHorarioDia(horaagora);
+    if ((nro == 0 && !(horarioDia == 'dia')) || (nro == 1 && !(horarioDia == 'tarde')) || (nro == 2 && !(horarioDia == 'noite'))) {
       const pistoranjo = client.emojis.find(emoji => emoji.name === emojis[0]);
       msg.reply(`Olha a hora fdp. ${pistoranjo}`);
     } else {
-      let link = greet[nr][Math.floor((Math.random() * greet[nr].length) + 1) - 1];
+      let link = greet[nro][Math.floor((Math.random() * greet[nro].length) + 1) - 1];
       msg.channel.send(functions.fnEnviaImagemEmbed(link));
     }
     return;

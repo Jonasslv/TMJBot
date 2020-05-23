@@ -5,6 +5,34 @@ const {dictionary} = require('./resources');
 const objects = require('./objects');
 const { readFileSync } = require('fs');
 
+function fnChecaJogoValido(game){
+    if(game == null || game.toString() == null){
+        return false;
+    }
+    switch(game.toString().toUpperCase()){
+        case 'SPOTIFY': case 'WALLPAPER ENGINE': case 'CUSTOM STATUS':
+            return false;
+        default:
+            return true;
+    }
+}
+
+function fnHorarioDia(horaagora){
+    let horario;
+    switch (horaagora){
+        case 6: case 7: case 8: case 9: case 10: case 11: 
+            horario = 'dia';
+            break;
+        case 12: case 13: case 14: case 15: case 16: case 17: case 18: 
+            horario = 'tarde';
+            break;
+        case 19: case 20: case 21: case 22: case 23: case 0: case 1: case 2: case 3: case 4: case 5: 
+            horario = 'noite';
+            break;
+    }
+    return horario;
+}
+
 function fnEnviaImagemEmbed(link){
     const Embed = new RichEmbed().setImage(link);
     return Embed;
@@ -275,5 +303,7 @@ module.exports = {
     fnUpdateRegistro: fnUpdateRegistro,
     //função que grava no registro um jogo por usuario
     fnInsertRegistro: fnInsertRegistro,
-    fnEnviaImagemEmbed:fnEnviaImagemEmbed
+    fnEnviaImagemEmbed:fnEnviaImagemEmbed,
+    fnHorarioDia:fnHorarioDia,
+    fnChecaJogoValido:fnChecaJogoValido
 }

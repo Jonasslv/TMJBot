@@ -257,7 +257,7 @@ client.on('message', msg => {
 
 client.on('presenceUpdate', (oldMember, newMember) => {
   //Verifica se o usuário começou a jogar/não é bot/não é spotify
-  if (newMember.presence.game != null && !newMember.user.bot && newMember.presence.game.toString() != 'Spotify' && newMember.presence.game.toString() != 'Wallpaper Engine' && newMember.presence.game.toString() != null) {
+  if (!(newMember.user.bot) && functions.fnChecaJogoValido(newMember.presence.game)){
     functions.fnBuscaId(newMember.user.id, newMember.presence.game.toString(), newMember, newMember.guild.id, db);
   }
 
