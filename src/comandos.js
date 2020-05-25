@@ -460,7 +460,9 @@ function fnCopypastaRandom(msg) {
     return;
   }
   
-function fnMeusBacanos(guilda, tipo, data, canal, db) {
+  async function fnMeusBacanos(guilda, tipo, data, canal, db) {
+  //adicionado delay para o banco poder gravar em segurança antes de uma segunda mensagem
+  await functions.fnSleep(2000);
     db.all('select * from GREETINGS where GUILDA = "' + guilda + '" and DATA = "' + data + '"  ', (err, row) => {
         if (err) {
             throw err;

@@ -138,6 +138,10 @@ function fnInsertRegistro(usuario, jogo, guilda, db) {
     });
 }
 
+function fnSleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
 function fnGerarEmojiMsg(nomeEmoji, idEmoji, animado) {
     let str;
     if (animado) {
@@ -305,5 +309,6 @@ module.exports = {
     fnInsertRegistro: fnInsertRegistro,
     fnEnviaImagemEmbed:fnEnviaImagemEmbed,
     fnHorarioDia:fnHorarioDia,
-    fnChecaJogoValido:fnChecaJogoValido
+    fnChecaJogoValido:fnChecaJogoValido,
+    fnSleep:fnSleep
 }

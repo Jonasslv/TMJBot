@@ -118,9 +118,7 @@ client.on('message', msg => {
 
     //se for segunda quarta quinta ou sexta apartir das 9 da manhã envia um meus bacanos
     if (((diahoje == 3 || diahoje == 4 || diahoje == 1) && horaagora >= 9) || (diahoje == 5 && horaagora >= 21)) {
-      if (functions.fnBuscaCooldown(msg.guild.id, 'BACANOS', dia, msg.channel)) {
         comandos.fnMeusBacanos(msg.guild.id, diahoje, today, msg.channel, db);
-      }
     }
 
     //se a mensagem conter normie manda tu parar de ser normie
