@@ -10,7 +10,7 @@ function fnChecaJogoValido(game){
         return false;
     }
     switch(game.toString().toUpperCase()){
-        case 'SPOTIFY': case 'WALLPAPER ENGINE': case 'CUSTOM STATUS':
+        case 'SPOTIFY': case 'WALLPAPER ENGINE': case 'CUSTOM STATUS': case 'Erro': case 'Visual Studio Code':
             return false;
         default:
             return true;
@@ -106,7 +106,7 @@ function fnUpdateRegistro(usuario, jogo, guilda, data, db) {
     if (data != today) {
         db.run('UPDATE jpu SET DATA = $today WHERE ID_USUARIO = $iduser and NOME_JOGO = $nomejogo and GUILDA = $idguild',{
             $today: today,
-            $iduser: u,
+            $iduser: usuario,
             $nomejogo: jogo,
             $idguild: guilda
         }, function(err, row) {
@@ -223,6 +223,7 @@ function fnBuscaId(usuario, jogo, newMember, guilda, db) {
     const blacklist = 2;
     db.all(`SELECT * FROM jpu where ` + dictionary[blacklist] + ` ID_USUARIO =  $iduser and upper(NOME_JOGO) = $nomejogo and GUILDA = $idguild`,{
         $iduser:usuario,
+        $idguild: guilda,
         $nomejogo: jogo.toUpperCase(),
     } , function(err, row) {
         if (err) {
